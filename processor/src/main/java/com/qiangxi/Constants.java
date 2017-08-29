@@ -6,5 +6,5 @@ package com.qiangxi;
 
 public class Constants {
 
-    public static final String TIP = "//系统编译生成,请勿编辑或修改!!!";
+    public static final String TIP = "系统编译生成,请勿编辑或修改!!!";
 }

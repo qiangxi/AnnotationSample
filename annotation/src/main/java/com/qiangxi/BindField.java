@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface BindView {
-   int value() default -1;
+public @interface BindField {
+    boolean value() default false;
 }
