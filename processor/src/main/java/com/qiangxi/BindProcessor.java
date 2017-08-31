@@ -28,8 +28,6 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic.Kind;
 
-import sun.rmi.runtime.Log;
-
 @AutoService(Processor.class)//这行代码是固定的,必须传递Processor.class
 public class BindProcessor extends AbstractProcessor {
     private Filer mFiler;
@@ -117,7 +115,7 @@ public class BindProcessor extends AbstractProcessor {
             } else if (elementKind == ElementKind.ANNOTATION_TYPE) {
                 //注解类
             }
-            log("当前类的类型：" + enclosingElementType);
+            log("当前类的类型：" + elementKind);
             NestingKind nestingKind = enclosingElement.getNestingKind();
             if (nestingKind == NestingKind.ANONYMOUS) {
                 //匿名类
@@ -130,19 +128,20 @@ public class BindProcessor extends AbstractProcessor {
             List<? extends TypeMirror> interfaces = enclosingElement.getInterfaces();
             for (TypeMirror anInterface : interfaces) {
                 String implName = anInterface.toString();
-                log("实现的接口：" + anInterface.toString());
+                log("实现的接口：" + implName);
             }
 
             Set<Modifier> modifiers = enclosingElement.getModifiers();
             for (Modifier modifier : modifiers) {
                 if (modifier == Modifier.ABSTRACT) {
-
+                    //抽象类
                 }
             }
             String targetType = enclosingElement.getQualifiedName().toString();//原始类的类名
             String classPackage = getPackageName(enclosingElement);//原始类的包名
             String className = getClassName(enclosingElement, classPackage) + "Out";//输出类名
             Name targetName = element.getSimpleName();//注解所标记的字段名称
+//            BindClass annotation = enclosingElement.getAnnotation(BindClass.class);
             BindClass bindClass = element.getAnnotation(BindClass.class);//获取注解
             int value = bindClass.value();//获取注解的属性值
 //            log("原始类名：" + targetType);
@@ -181,7 +180,7 @@ public class BindProcessor extends AbstractProcessor {
 //            log("输出类名：" + className);
 //            log("标记字段：" + targetName);
 //            log("value：" + value);
-//            generatorJavaFile(targetName + "Generator", value);
+            generatorJavaFile(targetName + "Generator");
         }
 
     }
@@ -199,7 +198,7 @@ public class BindProcessor extends AbstractProcessor {
         return type.getQualifiedName().toString().substring(packageLen).replace('.', '$');
     }
 
-    private void generatorJavaFile(String fileName, int value) {
+    private void generatorJavaFile(String fileName) {
 
         MethodSpec method = MethodSpec.methodBuilder("idMethod")
                 .returns(TypeName.VOID)
